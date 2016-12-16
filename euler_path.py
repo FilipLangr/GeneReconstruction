@@ -1,24 +1,10 @@
 from collections import defaultdict
 
-class Node:
-    """
-    Simple node representation.
-    """
-    
-    # The (k-1)mer of the node.
-    kmer = ""
-    
-    def __init__(self, kmer):
-        self.kmer = kmer
-        
-    def __str__(self):
-        return self.kmer
-
 class Graph:
     """
     Graph represented as a dict.
     Keys: kmers (string).
-    Values: Set of neighbouring nodes represented as class Node.
+    Values: List of neighbouring kmers (string).
     """
     
     graph = defaultdict(set)
@@ -38,7 +24,7 @@ class Graph:
             # Compute the number of edges going into the node.
             into = 0
             for neigh in self.graph:
-                into += sum(1 for nd in self.graph[neigh] if nd.kmer == node)
+                into += sum(1 for kmer in self.graph[neigh] if kmer == node)
             # If out > into, we should begin with that node.
             if out > into:
                 return return_node
@@ -47,7 +33,7 @@ class Graph:
         return return_node
     
     def __str__(self):
-        return "Graph:\n" + "\n".join(item + ": " + " ".join(str(item) for item in euler_graph.graph[item]) for item in euler_graph.graph)
+        return 30*"=" + "\nGraph:\n" + "\n".join(item + ": " + " ".join(item for item in euler_graph.graph[item]) for item in euler_graph.graph) + "\n" + 30*"="
 
 
 def get_kmers(sequence, k):
@@ -61,8 +47,8 @@ def get_graph(sequence, k):
         #we add nodes (k-1 mer) and edge in graph : n1 -> n2
         n1 = kmer[:-1]
         n2 = kmer[1:]
-        v = g.graph.get(n1, set())
-        v.add(Node(n2))
+        v = g.graph.get(n1, list())
+        v.append(n2)
         g.graph[n1] = v
 
     return g
@@ -96,7 +82,7 @@ def euler_path(euler_graph):
             # Add node to the stack.
             stack.append(node)
             # New node is now current node.
-            node = new_node.kmer
+            node = new_node
             
     return "".join(path)[::-1]
 
