@@ -1,14 +1,27 @@
 from collections import defaultdict
 
+class Node:
+    """
+    Simple node representation.
+    """
+    
+    # The (k-1)mer of the node.
+    kmer = ""
+    
+    def __init__(self, kmer):
+        self.kmer = kmer
+        
+    def __str__(self):
+        return self.kmer
 
 class Graph:
     """
     Graph represented as a dict.
-    Keys: nodes.
-    Values: Set of neighbouring nodes - there is one edge between the node (key) and all nodes in a a set (value).
+    Keys: kmers (string).
+    Values: Set of neighbouring nodes represented as class Node.
     """
     
-    graph = defaultdict(set) # {Node1: (Node2, Node3, Node2), Node2: {Node2, Node1, Node4}}
+    graph = defaultdict(set)
     
     def find_beginning(self):
         """
@@ -19,19 +32,22 @@ class Graph:
         
         return_node = None
         for node in self.graph:
+            return_node = node
             # The number of edges going out from the node.
             out = len(self.graph[node])
             # Compute the number of edges going into the node.
             into = 0
             for neigh in self.graph:
-                if node in self.graph[neigh]:
-                    into += 1
+                into += sum(1 for nd in self.graph[neigh] if nd.kmer == node)
             # If out > into, we should begin with that node.
             if out > into:
-                return_node = node
+                return return_node
             
         # All nodes have even degree, the graph is Euler cycle, first node can be whatever node.
         return return_node
+    
+    def __str__(self):
+        return "Graph:\n" + "\n".join(item + ": " + " ".join(str(item) for item in euler_graph.graph[item]) for item in euler_graph.graph)
 
 
 def get_kmers(sequence, k):
@@ -46,7 +62,7 @@ def get_graph(sequence, k):
         n1 = kmer[:-1]
         n2 = kmer[1:]
         v = g.graph.get(n1, set())
-        v.add(n2)
+        v.add(Node(n2))
         g.graph[n1] = v
 
     return g
@@ -60,6 +76,7 @@ def euler_path(euler_graph):
     
     # Find the first node to start with.
     node = euler_graph.find_beginning()
+    print("Starting node: %s" % node)
     
     # Go through graph.
     while True:
@@ -79,14 +96,17 @@ def euler_path(euler_graph):
             # Add node to the stack.
             stack.append(node)
             # New node is now current node.
-            node = new_node
+            node = new_node.kmer
             
     return "".join(path)[::-1]
 
 if __name__ == "__main__":
-    # Load graph.
-    euler_graph = get_graph("CATGCATAGCAGAC", 4)
+    
+    # Create graph.
+    euler_graph = get_graph("TAATGCCATGGGATGTT", 3)
+    print(euler_graph)
+    
     # Find sequence (Euler path) in the graph.
     sequence = euler_path(euler_graph)
     print("Found sequence:   %s" % sequence)
-    print("Desired sequence:  CATGCATAGCAGAC" )
+    print("Desired sequence: TAATGCCATGGGATGTT" )
