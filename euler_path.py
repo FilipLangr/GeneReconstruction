@@ -1,19 +1,6 @@
 from collections import defaultdict
 
-class Node:
-    """
-    Simple node representation.
-    """
-    
-    # The (k-1)mer of the node.
-    kmer = ""
-    # Identificator, probably useless.
-    i = -1
-    
-    def __init__(self, i, kmer):
-        self.kmer = kmer
-        self.i = i
-    
+
 class Graph:
     """
     Graph represented as a dict.
@@ -32,7 +19,6 @@ class Graph:
         
         return_node = None
         for node in self.graph:
-            return_node = node
             # The number of edges going out from the node.
             out = len(self.graph[node])
             # Compute the number of edges going into the node.
@@ -42,42 +28,29 @@ class Graph:
                     into += 1
             # If out > into, we should begin with that node.
             if out > into:
-                return node
+                return_node = node
             
         # All nodes have even degree, the graph is Euler cycle, first node can be whatever node.
         return return_node
-                
 
-def load_graph():
-    """ Generate simple testing graph. """
-    
+
+def get_kmers(sequence, k):
+        for i in range(len(sequence) - (k - 1)):
+            yield sequence[i:i+k]
+
+def get_graph(sequence, k):
     g = Graph()
-    
-    n01 = Node(1, "AB")
-    n02 = Node(2, "BC")
-    n03 = Node(3, "CD")
-    
-    n04 = Node(4, "DE")
-    n05 = Node(5, "EC")
-    
-    n06 = Node(6, "DX")
-    n07 = Node(7, "XY")
-    
-    n08 = Node(8, "CE")
-    
-    g.graph[n01] = set([n02])
-    g.graph[n02] = set([n03])
-    g.graph[n03] = set([n04, n06])
-    g.graph[n04] = set([n05])
-    g.graph[n05] = set([n03, n08])
-    g.graph[n06] = set([n07])
-    g.graph[n08] = set([n05])
-    
-    # The seqeunce the graph should represent.
-    should_be = "ABCDECECDXY"
-    
-    return (g, should_be)
-    
+    kmers = get_kmers(sequence, k)
+    for kmer in kmers:
+        #we add nodes (k-1 mer) and edge in graph : n1 -> n2
+        n1 = kmer[:-1]
+        n2 = kmer[1:]
+        v = g.graph.get(n1, set())
+        v.add(n2)
+        g.graph[n1] = v
+
+    return g
+
 def euler_path(euler_graph):
     """ Find the path in given Euler graph. """
     
@@ -93,10 +66,10 @@ def euler_path(euler_graph):
         if not euler_graph.graph[node]:
             # No more edges going from this node.
             # Append the sequence with the last letter of that node's k-mer.
-            path.append(node.kmer[-1])
+            path.append(node[-1])
             if not stack:
                 # We went through the whole graph.
-                path.append(node.kmer[-2::-1])
+                path.append(node[-2::-1])
                 break
             # Take a node from the stack.
             node = stack.pop()
@@ -108,12 +81,12 @@ def euler_path(euler_graph):
             # New node is now current node.
             node = new_node
             
-    return "".join(path[::-1])
+    return "".join(path)[::-1]
 
 if __name__ == "__main__":
     # Load graph.
-    euler_graph, should_be = load_graph()
+    euler_graph = get_graph("CATGCATAGCAGAC", 4)
     # Find sequence (Euler path) in the graph.
     sequence = euler_path(euler_graph)
     print("Found sequence:   %s" % sequence)
-    print("Desired sequence: %s" % should_be)
+    print("Desired sequence:  CATGCATAGCAGAC" )
