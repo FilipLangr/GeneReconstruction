@@ -7,7 +7,7 @@ class Graph:
     Values: List of neighbouring kmers (string).
     """
     
-    graph = defaultdict(set)
+    graph = defaultdict(list)
     
     def find_beginning(self):
         """
