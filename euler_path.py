@@ -36,8 +36,8 @@ class Graph:
         return 30*"=" + "\nGraph:\n" + "\n".join(item + ": " + " ".join(item for item in euler_graph.graph[item]) for item in euler_graph.graph) + "\n" + 30*"="
 
 
-def get_kmers(sequence, k):
-        for i in range(len(sequence) - (k - 1)):
+def get_kmers(sequence, k, d=1):
+        for i in range(0, len(sequence) - (k - 1), d):
             yield sequence[i:i+k]
 
 def get_graph(sequence, k):
@@ -47,9 +47,7 @@ def get_graph(sequence, k):
         #we add nodes (k-1 mer) and edge in graph : n1 -> n2
         n1 = kmer[:-1]
         n2 = kmer[1:]
-        v = g.graph.get(n1, list())
-        v.append(n2)
-        g.graph[n1] = v
+        g.graph[n1].append(n2)
 
     return g
 
