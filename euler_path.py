@@ -7,7 +7,21 @@ class Graph:
     Values: List of neighbouring kmers (string).
     """
     
-    graph = defaultdict(list)
+    def __init__(self):
+        """
+        Construct a sensible empty graph. self.indeg is technically not needed, but is a useful syntactic sugar.
+        """
+        self.graph = defaultdict(list)
+        self.indeg = defaultdict(lambda: 0)
+        self.outdeg = defaultdict(lambda: 0)
+
+    def add_arrow(self, src, dest):
+        """
+        Adds an arrow from node src to node dest to the graph.
+        """
+        self.graph[src].append(dest)
+        self.outdeg[src] += 1
+        self.indeg[dest] += 1
     
     def find_beginning(self):
         """
@@ -19,21 +33,15 @@ class Graph:
         return_node = None
         for node in self.graph:
             return_node = node
-            # The number of edges going out from the node.
-            out = len(self.graph[node])
-            # Compute the number of edges going into the node.
-            into = 0
-            for neigh in self.graph:
-                into += sum(1 for kmer in self.graph[neigh] if kmer == node)
             # If out > into, we should begin with that node.
-            if out > into:
+            if self.outdeg[node] > self.indeg[node]:
                 return return_node
             
         # All nodes have even degree, the graph is Euler cycle, first node can be whatever node.
         return return_node
     
     def __str__(self):
-        return 30*"=" + "\nGraph:\n" + "\n".join(item + ": " + " ".join(item for item in euler_graph.graph[item]) for item in euler_graph.graph) + "\n" + 30*"="
+        return 30*"=" + "\nGraph:\n" + "\n".join(item + " (>%d, %d>)" % (self.indeg[item], self.outdeg[item]) + ": " + " ".join(item for item in euler_graph.graph[item]) for item in euler_graph.graph) + "\n" + 30*"="
 
 
 def get_kmers(sequence, k, d=1):
@@ -47,7 +55,7 @@ def get_graph(sequence, k):
         #we add nodes (k-1 mer) and edge in graph : n1 -> n2
         n1 = kmer[:-1]
         n2 = kmer[1:]
-        g.graph[n1].append(n2)
+        g.add_arrow(n1, n2)
 
     return g
 
