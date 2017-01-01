@@ -41,7 +41,7 @@ class Graph:
         return return_node
     
     def __str__(self):
-        return 30*"=" + "\nGraph:\n" + "\n".join(item + " (>%d, %d>)" % (self.indeg[item], self.outdeg[item]) + ": " + " ".join(item for item in euler_graph.graph[item]) for item in euler_graph.graph) + "\n" + 30*"="
+        return 30*"=" + "\nGraph:\n" + "\n".join(str(item) + " (>%d, %d>)" % (self.indeg[item], self.outdeg[item]) + ": " + " ".join(str(item) for item in euler_graph.graph[item]) for item in euler_graph.graph) + "\n" + 30*"="
 
 
 def get_kmers(sequence, k, d=1):
@@ -69,7 +69,7 @@ def get_paired_graph(sequence, k, d):
   for pair in pairs:
     n1 = (pair[0][:-1], pair[1][:-1])
     n2 = (pair[0][1:], pair[1][1:])
-    g.graph[n1].append(n2)
+    g.add_arrow(n1, n2)
     #if n1 not in g:
       #g[n1] = []
     #g[n1].append(n2)
@@ -84,17 +84,17 @@ def euler_path(euler_graph):
     
     # Find the first node to start with.
     node = euler_graph.find_beginning()
-    print("Starting node: %s" % node)
+    print("Starting node: %s" % str(node))
     
     # Go through graph.
     while True:
         if not euler_graph.graph[node]:
             # No more edges going from this node.
             # Append the sequence with the last letter of that node's k-mer.
-            path.append(node[-1])
+            path.append(node)
             if not stack:
                 # We went through the whole graph.
-                path.append(node[-2::-1])
+                path.append(node)
                 break
             # Take a node from the stack.
             node = stack.pop()
@@ -106,7 +106,29 @@ def euler_path(euler_graph):
             # New node is now current node.
             node = new_node
             
-    return "".join(path)[::-1]
+    return path
+
+def gapReconstruction(prefixString, suffixString, k, d):
+  for i in range(k+d+1,len(prefixString)):
+    if prefixString[i] != suffixString[i-k-d]:
+      return None
+  return prefixString + suffixString[-(k+d)] ##prefixString concatenated with the last k+d symbols of suffixString
+
+def render_path_single(path):
+    """
+    Generate a reconstructed genome based on the given Eulerian path (reversed) of (k-1)-mer nodes.
+    """
+    return ("".join(map(lambda x: x[-1], path[:-1])) + path[-1][-2::-1])[::-1]
+
+def render_path_paired(path, k, d):
+    """
+    Generate a reconstructed genome based on the given Eulerian path (reversed) of (k, d)-mer nodes.
+    TODO this doesn't seem to really work, gapReconstruction above will return None
+    """
+    path = path[::-1]
+    prefix = path[0][0] + "".join(map(lambda x: x[0][-1], path[1:]))
+    suffix = path[0][1] + "".join(map(lambda x: x[1][-1], path[1:]))
+    return gapReconstruction(prefix, suffix, k, d)
 
 if __name__ == "__main__":
     
@@ -116,24 +138,17 @@ if __name__ == "__main__":
     
     # Find sequence (Euler path) in the graph.
     sequence = euler_path(euler_graph)
-    print("Found sequence:   %s" % sequence)
+    print("Found sequence:   %s" % render_path_single(sequence))
     print("Desired sequence: TAATGCCATGGGATGTT" )
     
     print("\n\n\nPARIED GRAPH:")
 
-'''    
     # Create graph.
     euler_graph = get_paired_graph("TAATGCCATGGGATGTT", 3, 1)
-    print(euler_graph.graph)
+    print(euler_graph)
     
     # Find sequence (Euler path) in the graph.
     sequence = euler_path(euler_graph)
-    print("Found sequence:   %s" % sequence)
+    print("Found sequence:   %s" % render_path_paired(sequence, 3, 1))
     print("Desired sequence: TAATGCCATGGGATGTT" )
-'''
     
-def gapReconstruction(prefixString, suffixString, k, d):
-  for i in range(k+d+1,len(prefixString)):
-    if prefixString[i] != suffixString(i-k-d):
-      return None
-  return prefixString + suffixString[-(k+d)] ##prefixString concatenated with the last k+d symbols of suffixString
