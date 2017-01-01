@@ -51,6 +51,22 @@ def get_graph(sequence, k):
 
     return g
 
+def get_paired_kmers(sequence, k, d):
+  for i in range(0, len(sequence) - 2 * k - d + 1):
+    yield (sequence[i:i+k], sequence[i+k+d:i+2*k+d])
+    
+def get_paired_graph(sequence, k, d):
+  g = Graph()
+  pairs = get_paired_kmers(sequence, k, d)
+  for pair in pairs:
+    n1 = (pair[0][:-1], pair[1][:-1])
+    n2 = (pair[0][1:], pair[1][1:])
+    g.graph[n1].append(n2)
+    #if n1 not in g:
+      #g[n1] = []
+    #g[n1].append(n2)
+  return g
+
 def euler_path(euler_graph):
     """ Find the path in given Euler graph. """
     
@@ -94,3 +110,22 @@ if __name__ == "__main__":
     sequence = euler_path(euler_graph)
     print("Found sequence:   %s" % sequence)
     print("Desired sequence: TAATGCCATGGGATGTT" )
+    
+    print("\n\n\nPARIED GRAPH:")
+
+'''    
+    # Create graph.
+    euler_graph = get_paired_graph("TAATGCCATGGGATGTT", 3, 1)
+    print(euler_graph.graph)
+    
+    # Find sequence (Euler path) in the graph.
+    sequence = euler_path(euler_graph)
+    print("Found sequence:   %s" % sequence)
+    print("Desired sequence: TAATGCCATGGGATGTT" )
+'''
+    
+def gapReconstruction(prefixString, suffixString, k, d):
+  for i in range(k+d+1,len(prefixString)):
+    if prefixString[i] != suffixString(i-k-d):
+      return None
+  return prefixString + suffixString[-(k+d)] ##prefixString concatenated with the last k+d symbols of suffixString
