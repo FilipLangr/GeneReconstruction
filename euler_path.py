@@ -94,7 +94,7 @@ def euler_path(euler_graph):
             path.append(node)
             if not stack:
                 # We went through the whole graph.
-                path.append(node)
+                #path.append(node)
                 break
             # Take a node from the stack.
             node = stack.pop()
@@ -112,13 +112,14 @@ def gapReconstruction(prefixString, suffixString, k, d):
   for i in range(k+d+1,len(prefixString)):
     if prefixString[i] != suffixString[i-k-d]:
       return None
-  return prefixString + suffixString[-(k+d)] ##prefixString concatenated with the last k+d symbols of suffixString
+  return prefixString + suffixString[-(k+d):] ##prefixString concatenated with the last k+d symbols of suffixString
 
 def render_path_single(path):
     """
     Generate a reconstructed genome based on the given Eulerian path (reversed) of (k-1)-mer nodes.
     """
-    return ("".join(map(lambda x: x[-1], path[:-1])) + path[-1][-2::-1])[::-1]
+    print("path: ", path[::-1])
+    return ("".join(map(lambda x: x[-1], path)) + path[-1][-2::-1])[::-1]
 
 def render_path_paired(path, k, d):
     """
