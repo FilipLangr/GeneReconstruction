@@ -131,8 +131,20 @@ def render_path_paired(path, k, d):
     suffix = path[0][1] + "".join(map(lambda x: x[1][-1], path[1:]))
     return gapReconstruction(prefix, suffix, k, d)
 
+def load_fasta(file_handle):
+    string = ""
+    line = file_handle.readline()
+    if not line or line[0] != ">": return None
+    while True:
+        line = file_handle.readline()
+        if not line or line[0] == ">": break
+
+        line = line.strip()
+        if not line or line[0] == ";": continue
+        string += line.strip()
+    return string
+
 if __name__ == "__main__":
-    
     # Create graph.
     euler_graph = get_graph("TAATGCCATGGGATGTT", 3)
     print(euler_graph)
@@ -153,3 +165,14 @@ if __name__ == "__main__":
     print("Found sequence:   %s" % render_path_paired(sequence, 3, 1))
     print("Desired sequence: TAATGCCATGGGATGTT" )
     
+    # Try processing an input file.
+    from sys import argv, stdin
+
+    if len(argv) < 2 or argv[1] == "-":
+        file_handle = stdin
+    else:
+        file_handle = open(argv[1], "r")
+    fasta = load_fasta(file_handle)
+    euler_graph = get_graph(fasta, 5)
+    print("Found sequence:   %s" % (render_path_single(euler_path(euler_graph))))
+    print("Desired sequence: %s" % (fasta))
