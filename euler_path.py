@@ -154,7 +154,7 @@ if __name__ == "__main__":
     print("Found sequence:   %s" % render_path_single(sequence))
     print("Desired sequence: TAATGCCATGGGATGTT" )
     
-    print("\n\n\nPARIED GRAPH:")
+    print("\n\n\nPAIRED GRAPH:")
 
     # Create graph.
     euler_graph = get_paired_graph("TAATGCCATGGGATGTT", 3, 1)
