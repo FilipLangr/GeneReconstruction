@@ -84,7 +84,7 @@ def euler_path(euler_graph):
     
     # Find the first node to start with.
     node = euler_graph.find_beginning()
-    print("Starting node: %s" % str(node))
+    #print("Starting node: %s" % str(node))
     
     # Go through graph.
     while True:
@@ -118,7 +118,7 @@ def render_path_single(path):
     """
     Generate a reconstructed genome based on the given Eulerian path (reversed) of (k-1)-mer nodes.
     """
-    print("path: ", path[::-1])
+    #print("path: ", path[::-1])
     return ("".join(map(lambda x: x[-1], path)) + path[-1][-2::-1])[::-1]
 
 def render_path_paired(path, k, d):
@@ -143,6 +143,43 @@ def load_fasta(file_handle):
         if not line or line[0] == ";": continue
         string += line.strip()
     return string
+
+
+def test_single_graph(genome_sequence):
+    """
+       Testing fuction for finding smallest parameter k so that genome sequence is still reconstructed correctly.
+    """
+    k = 2
+    while True:
+
+        euler_graph = get_graph(genome_sequence, k)
+        # Find sequence (Euler path) in the graph.
+        sequence = euler_path(euler_graph)
+
+        if render_path_single(sequence) == genome_sequence:
+            print("Smallest possible k for single de Brujin graph: %d, Genome size: %d" % (k ,len(genome_sequence)))
+            break
+
+        k +=1
+
+def test_paired_graph(genome_sequence):
+    """
+        Testing fuction for finding smallest parameters k and d so that genome sequence is still reconstructed correctly.
+    """
+    k = 2
+    d = 0
+    while True:
+
+        euler_graph = get_paired_graph(genome_sequence, k, d)
+
+        # Find sequence (Euler path) in the graph.
+        sequence = euler_path(euler_graph)
+
+        if render_path_paired(sequence, k, d) == genome_sequence:
+            print("Smallest possible k for paired de Brujin graph: %d, Genome size: %d" % (k, len(genome_sequence)))
+            break
+
+        k += 1
 
 if __name__ == "__main__":
     # Create graph.
@@ -172,7 +209,15 @@ if __name__ == "__main__":
         file_handle = stdin
     else:
         file_handle = open(argv[1], "r")
+
     fasta = load_fasta(file_handle)
-    euler_graph = get_graph(fasta, 5)
+    euler_graph = get_graph(fasta, 3)
     print("Found sequence:   %s" % (render_path_single(euler_path(euler_graph))))
     print("Desired sequence: %s" % (fasta))
+
+    #3 genome files in FASTA format must be put in the argument line ---> genome_40k genome_100k genome_180k
+    for filename in argv[1:]:
+        file_handle = open(filename, "r")
+        genome_sequence = load_fasta(file_handle)
+        test_single_graph(genome_sequence)
+        test_paired_graph(genome_sequence)
