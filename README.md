@@ -7,6 +7,8 @@ Repository for Introduction to bioinformatics project at FRI, UNI-LJ, winter sem
 
 *TO BE TRANSFORMED INTO ABSTRACT OR PROPER INTRODUCTION!*
 
+In Gene reconstruction research project we had to examine three different methods for genome assembly.
+
 Take a genome and divide it into k-mers. Use the k-mers to reconstruct the genome using various methods. Start with creating a graph where nodes represent k-mers and edges connect overlapping k-mers. Find a path through the graph that visits each node only once. Then construct another graph, where nodes represent (k-1)-mers and k-mers are placed on edges (de Bruijn graph). This time find a path through the graph where each edge is traversed exactly once. Lastly, create a paired de Bruijn graph from consecutive k-mers that are some distance d apart.
 
 Test your methods on genomes of different length. Try different values for the parameters k and d. Report how the length of the genome affects each method, at which values of k and d you are able to reconstruct the original genome and the number of possible solutions you get.
@@ -15,6 +17,7 @@ Test your methods on genomes of different length. Try different values for the p
 *please write sth about the part that you did*
 
 ###Overlapping kmers
+
 
 ###De Brujin graph
 
@@ -31,7 +34,26 @@ Once we have successfully constructed the paired de Brujin graph we can use the 
 >*The results would often include a tabular representation of quantitative results of experiments and any visualization.*
 
 ##Results
-*possibly conclusion or sth. if overlapping with Experiments chapter*
+
+We had to find smallest possible parameters k and d so that genome sequence is still reconstructed correctly.
+
+
+###Single de Brujin graph
+|Genome length| k  | Possible solutions |
+|----------------| ------------- | ------------- |
+|~40k| 18  | ?  |
+|~100k| 27  | ?  |
+|~180k| 60  | ?  |
+
+###Paired de Brujin graph
+|Genome length| k | d| Possible solutions |
+|----------------| ------------- | -------------| ------------- |
+|~40k| 11  | 0  |? |
+|~100k| 14  | 0  |?|
+|~180k| 30| 0  |? |
+
+k - length of the reads
+d - distance between two reads
 
 
 ##References
