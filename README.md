@@ -21,7 +21,7 @@ Genome reconstruction with overlapping *k*-mers starts with building an overlap 
 
 ###De Brujin graph
 
-In overlapping k-mers method we have a graph where nodes represent k-mers and edges connect overlapping k-mers. When using this graph to construct original genome, we have to Hamiltonian path which is NP-complete problem. So we use better method, we construct a graph where we assign k-mers to edges and nodes represent *(k-1)*-mers. When having graph like that, we have to find Eulerian path.
+In overlapping *k*-mers method we have a graph where nodes represent k-mers and edges connect overlapping *k*-mers. When using this graph to construct original genome, we have to Hamiltonian path which is NP-complete problem. So we use better method, we construct a graph where we assign k-mers to edges and nodes represent *(k-1)*-mers. When having graph like that, we have to find Eulerian path.
 
 Graph where nodes represent *(k-1)*-mers and edges represent k-mers is called De Brujin graph. When building De Bruin graph we must first split the genome into *k*-mers. For each *k*-mer we than construct two nodes with *(k-1)*-mer connected with directed edge representing given *k*-mer. For example, for *k*-mer ACCTG we then get two *(k-1)*-mer nodes ACCT --> CCTG and to the directed edge *k*-mer ACCTG is assigned. Then we just glue identically labeled nodes together. When gluing identically labeled nodes together, we must keep all edges, so sometimes we get more than one edge between two nodes.
 
@@ -70,7 +70,7 @@ Next we present a table of smallest found distances between two reads *d* for gi
 
 *d* - distance between two reads
 
-\* - Not every d in (0 ; 50000) interval was tested.
+\* - Not every *d* in (0 ; 50000) interval was tested.
 
 
 ##References
