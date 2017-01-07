@@ -5,48 +5,42 @@ Repository for Introduction to bioinformatics project at FRI, UNI-LJ, winter sem
 
 ##Introduction
 
-*TO BE TRANSFORMED INTO ABSTRACT OR PROPER INTRODUCTION!*
+In Gene reconstruction research project we examine three different methods for genome assembly. We divide genome into k-mers and then we use various methods to reconstruct genome into original sequence. First method is called overlapping kmers. We start by creating a graph where nodes represent *k*-mers and edges connect overlapping *k*-mers. Second method we implement is de Brujin graph in which we are searching for Eulerian path. Third method
+also uses de Brujin graph but instead of single reads (*k*-mers) we use read-pairs where pairs are some *d* distance apart.
 
-In Gene reconstruction research project we examine three different methods for genome assembly. First we divide genome into k-mers then we use various methods to reconstruct genome into original
-sequence. First method we implement is de Brujin graph in which we are searching for Eulerian path. Second method
-also use de Brujin graph but insted of single reads (k-mers) we use read-pairs where pairs are some d distance apart. Third method is called overlapping kmers. We start with
-creating a graph where nodes represent k-mers and edges connect overlapping k-mers. Our input data consists of 3 different bacteria genomes.
-Each bacteria genome has different number of nucleotides. Bacterias Klebsiella pneumoniae, Streptomyces silvensis and Citrobacter freundii have 40955, 104514, 180261 nucleotides respectively.
-In our research project we implement de Brujin graph methods and test them on genomes of different lengths. In the experiment we try different values for parameters k and d and report how the length
-of the genome affects each method. We find smallest possible values for parameters k and d so that genomes are are still reconstructed correctly.
+Our input data consists of 3 different bacteria genomes.Each bacteria genome has different number of nucleotides. Bacterias Klebsiella pneumoniae, Streptomyces silvensis and Citrobacter freundii have 40955, 104514, 180261 nucleotides respectively.
+
+In our research project we implement de Brujin graph methods and test them on genomes of different lengths. In the experiment we try different values for parameters *k* and *d* and report how the length of the genome affects each method. We find smallest possible values for parameters *k* and *d* so that genomes are are still reconstructed correctly.
 
 
 ##Methods
-*please write sth about the part that you did*
+
+###Overlapping kmers
+
+Genome reconstruction with overlapping *k*-mers starts with building an overlap graph --- *k*-mers represent nodes and edges connect two nodes for which it holde that suffix of the first is prefix of the second. Once that we have build the overlap graph we are looking for a path that visits each node exactly once. Such path is called Hamiltonian path. However, we skiped the implementation of overlapping kmers method because time required to solve the problem using any currently known algorithm increases very quickly as the size of the problem grows. Determining whether such paths and cycles exist in graphs is the Hamiltonian path problem, which is NP-complete.
 
 ###De Brujin graph
 
-In overlapping k-mers method we have a graph where nodes represent k-mers and edges connect overlapping k-mers. When using this graph to construct original genome, we have to Hamiltonian path which is NP-complete problem. So we use better method, we construct a graph where we assign k-mers to edges and nodes represent (k-1)-mers. When having graph like that, we have to find Eulerian path.
+In overlapping k-mers method we have a graph where nodes represent k-mers and edges connect overlapping k-mers. When using this graph to construct original genome, we have to Hamiltonian path which is NP-complete problem. So we use better method, we construct a graph where we assign k-mers to edges and nodes represent *(k-1)*-mers. When having graph like that, we have to find Eulerian path.
 
-Graph where nodes represent (k-1) mers and edges represent k-mers is called De Brujin graph. When building De Bruin graph we must first split the genome into k-mers. For each k-mer we than construct two nodes with (k-1)-mer connected with directed edge representing given k-mer. For example, for k-mer ACCTG we then get two (k-1)-mer nodes ACCT --> CCTG and to the directed edge k-mer ACCTG is assigned. Then we just glue identically labeled nodes together. When gluing identically labeled nodes together, we must keep all edges, so sometimes we get more than one edge between two nodes.
+Graph where nodes represent *(k-1)*-mers and edges represent k-mers is called De Brujin graph. When building De Bruin graph we must first split the genome into *k*-mers. For each *k*-mer we than construct two nodes with *(k-1)*-mer connected with directed edge representing given *k*-mer. For example, for *k*-mer ACCTG we then get two *(k-1)*-mer nodes ACCT --> CCTG and to the directed edge *k*-mer ACCTG is assigned. Then we just glue identically labeled nodes together. When gluing identically labeled nodes together, we must keep all edges, so sometimes we get more than one edge between two nodes.
 
 
 ###Paired de Brujin graph
 
-*TO DO: motivation, theoretical background...*
+In order to increase the read length we looked at paired de Brujin graphs. Pair-reads indirectly increase the read length and contain more information than *k*-mers.
 
 First step in building a paired de Brujin graph is spliting the genome into read-pairs. Read-pair consists of two reads (*k*-mers) that are separated by a fixed distance *d*. We denote them as *(k, d)-mers*. In the next step we compute prefix and suffix for each of the read-pairs. Given a *(k, d)*-mer *(a1, a2, ..., aK | b1, b2, ..., bK)* its prefix is *(a1, ..., a(K-1) | b1, ..., b(K-1))* and its suffix is *(a2, ..., aK | b2, ..., bK)*. It should be noted that for two consecutive *(k, d)*-mers, the suffix of the first read-pair is equal to the prefix of the second. We use prefix and suffix to create nodes of the de Brujin graph and *(k, d)*-mers as edges.
 
 Once we have successfully constructed the paired de Brujin graph we can use the same algorithm to find an Euler path as before. Once we have found the path we assemble a *prefixString* (a sequence obtained by joining the first items of nodes) and a *suffixString* (a sequence obtained by joining the second items of nodes). The *suffixString* is delayed for *k + d* nucleotides compared to the *prefixString*. It can happen that an Eulerian path in the graph does not spell the solution, so we have to check if the overlapping substrings of *prefixString* and *suffixString* match. If they match, we concatenate *prefixString* with the last *k + d* characters of *suffixString*.
 
-###Overlapping kmers
-We skip implementing overlapping kmers method because time required to solve the problem using any currently known algorithm increases very quickly as the size of the problem grows.
-We are supposed to search for Hamiltonian paths and cycles in the given graph of overlapping kmers.
-Determining whether such paths and cycles exist in graphs is the Hamiltonian path problem, which is NP-complete.
-
 ##Experiments
-We examine our De Brujin and paired De Brujin methods on 3 different genomes. We start with parameter values k=2 and d=0. When algorithms produce correct output results for given parameters value
-we stop. If the output result are not correct we increment parameter values by 1. At the end of execution we are left with smallest possible values of parameters k and d.
-
+We examine our De Brujin and paired De Brujin methods on 3 different genomes. We start with parameter values *k = 2* and *d = 0*. When algorithms produce correct output results for given parameters value
+we stop. If the output result are not correct we increment parameter values by 1. At the end of execution we are left with smallest possible values of parameters *k* and *d*.
 
 ##Results
 
-We had to find smallest possible parameters k and d so that genome sequence is still reconstructed correctly.
+We had to find smallest possible parameters *k* and *d* so that genome sequence is still reconstructed correctly.
 
 
 ###Single de Brujin graph
@@ -56,7 +50,7 @@ We had to find smallest possible parameters k and d so that genome sequence is s
 |~100k| 27  | ?  |
 |~180k| 60  | ?  |
 
-Next we present a table of smallest found distances between two reads d for given small-enough lengths of the reads k in a paired de Brujin graph. Also a smallest k for d=0 is presented.
+Next we present a table of smallest found distances between two reads *d* for given small-enough lengths of the reads *k* in a paired de Brujin graph. Also a smallest k for *d = 0* is presented.
 
 ###Paired de Brujin graph
 |Genome length| k | smallest d for given k| Possible solutions |
@@ -72,9 +66,9 @@ Next we present a table of smallest found distances between two reads d for give
 |~180k| 20| 20  |? |
 |~180k| 10| 60  |? |
 
-k - length of the reads
+*k* - length of the reads
 
-d - distance between two reads
+*d* - distance between two reads
 
 \* - Not every d in (0 ; 50000) interval was tested.
 
