@@ -7,17 +7,17 @@ Repository for Introduction to bioinformatics project at FRI, UNI-LJ, winter sem
 
 *TO BE TRANSFORMED INTO ABSTRACT OR PROPER INTRODUCTION!*
 
-In Gene reconstruction research project we had to examine three different methods for genome assembly.
+In Gene reconstruction research project we examine three different methods for genome assembly. First we divide genome into k-mers then we use various methods to reconstruct genome into original
+sequence. First method we implement is de Brujin graph in which we are searching for Eulerian path. Second method
+also use de Brujin graph but insted of single reads (k-mers) we use read-pairs where pairs are some d distance apart. Third method is called overlapping kmers. We start with
+creating a graph where nodes represent k-mers and edges connect overlapping k-mers. Our input data consists of 3 different bacteria genomes.
+Each bacteria genome has different number of nucleotides. Bacterias Klebsiella pneumoniae, Streptomyces silvensis and Citrobacter freundii have 40955, 104514, 180261 nucleotides respectively.
+In our research project we implement de Brujin graph methods and test them on genomes of different lengths. In the experiment we try different values for parameters k and d and report how the length
+of the genome affects each method. We find smallest possible values for parameters k and d so that genomes are are still reconstructed correctly.
 
-Take a genome and divide it into k-mers. Use the k-mers to reconstruct the genome using various methods. Start with creating a graph where nodes represent k-mers and edges connect overlapping k-mers. Find a path through the graph that visits each node only once. Then construct another graph, where nodes represent (k-1)-mers and k-mers are placed on edges (de Bruijn graph). This time find a path through the graph where each edge is traversed exactly once. Lastly, create a paired de Bruijn graph from consecutive k-mers that are some distance d apart.
-
-Test your methods on genomes of different length. Try different values for the parameters k and d. Report how the length of the genome affects each method, at which values of k and d you are able to reconstruct the original genome and the number of possible solutions you get.
 
 ##Methods
 *please write sth about the part that you did*
-
-###Overlapping kmers
-
 
 ###De Brujin graph
 
@@ -29,9 +29,15 @@ First step in building a paired de Brujin graph is spliting the genome into read
 
 Once we have successfully constructed the paired de Brujin graph we can use the same algorithm to find an Euler path as before. Once we have found the path we assemble a *prefixString* (a sequence obtained by joining the first items of nodes) and a *suffixString* (a sequence obtained by joining the second items of nodes). The *suffixString* is delayed for *k + d* nucleotides compared to the *prefixString*. It can happen that an Eulerian path in the graph does not spell the solution, so we have to check if the overlapping substrings of *prefixString* and *suffixString* match. If they match, we concatenate *prefixString* with the last *k + d* characters of *suffixString*.
 
+###Overlapping kmers
+We skip implementing overlapping kmers method because time required to solve the problem using any currently known algorithm increases very quickly as the size of the problem grows.
+We are supposed to search for Hamiltonian paths and cycles in the given graph of overlapping kmers.
+Determining whether such paths and cycles exist in graphs is the Hamiltonian path problem, which is NP-complete.
+
 ##Experiments
-*sth. about the experiments and possibly results --- according to general instructions:*
->*The results would often include a tabular representation of quantitative results of experiments and any visualization.*
+We examine our De Brujin and paired De Brujin methods on 3 different genomes. We start with parameter values k=2 and d=0. When algorithms produce correct output results for given parameters value
+we stop. If the output result are not correct we increment parameter values by 1. At the end of execution we are left with smallest possible values of parameters k and d.
+
 
 ##Results
 
