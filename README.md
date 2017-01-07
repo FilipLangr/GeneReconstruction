@@ -51,28 +51,27 @@ We had to find smallest possible parameters k and d so that genome sequence is s
 |~100k| 27  | ?  |
 |~180k| 60  | ?  |
 
-Here we present a table of smallest found d for given small-enough k in a paired de Brujin graph.
+Next we present a table of smallest found distances between two reads d for given small-enough lengths of the reads k in a paired de Brujin graph. Also a smallest k for d=0 is presented.
 
 ###Paired de Brujin graph
 |Genome length| k | smallest d for given k| Possible solutions |
 |----------------| ------------- | -------------| ------------- |
+|~40k| 11  | 0  |? |
 |~40k| 9  | 7  |? |
 |~40k| 8  | 2238  |? |
+|~100k| 14  | 0  |?|
+|~100k| 11  | 33  |?|
 |~100k| 10  | 145  |?|
+|~100k| 9  | 50000*  |?|
+|~180k| 30| 0  |? |
 |~180k| 20| 20  |? |
 |~180k| 10| 60  |? |
 
-\* - Not every d in (0 ; 5000) interval tested.
-
-###Paired de Brujin graph
-|Genome length| k | d| Possible solutions |
-|----------------| ------------- | -------------| ------------- |
-|~40k| 11  | 0  |? |
-|~100k| 14  | 0  |?|
-|~180k| 30| 0  |? |
-
 k - length of the reads
+
 d - distance between two reads
+
+\* - Not every d in (0 ; 50000) interval was tested.
 
 
 ##References
