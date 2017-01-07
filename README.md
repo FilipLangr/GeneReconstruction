@@ -59,7 +59,6 @@ Here we present a table of smallest found d for given small-enough k in a paired
 |~40k| 9  | 7  |? |
 |~40k| 8  | 2238  |? |
 |~100k| 10  | 145  |?|
-|~100k| 9  | 5000*  |?|
 |~180k| 20| 20  |? |
 |~180k| 10| 60  |? |
 
