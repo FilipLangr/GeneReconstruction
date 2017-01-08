@@ -61,20 +61,17 @@ def get_graph(sequence, k):
     return g
 
 def get_paired_kmers(sequence, k, d):
-  for i in range(0, len(sequence) - 2 * k - d + 1):
-    yield (sequence[i:i+k], sequence[i+k+d:i+2*k+d])
+    for i in range(0, len(sequence) - 2 * k - d + 1):
+        yield (sequence[i:i+k], sequence[i+k+d:i+2*k+d])
     
 def get_paired_graph(sequence, k, d):
-  g = Graph()
-  pairs = get_paired_kmers(sequence, k, d)
-  for pair in pairs:
-    n1 = (pair[0][:-1], pair[1][:-1])
-    n2 = (pair[0][1:], pair[1][1:])
-    g.add_arrow(n1, n2)
-    #if n1 not in g:
-      #g[n1] = []
-    #g[n1].append(n2)
-  return g
+    g = Graph()
+    pairs = get_paired_kmers(sequence, k, d)
+    for pair in pairs:
+        n1 = (pair[0][:-1], pair[1][:-1])
+        n2 = (pair[0][1:], pair[1][1:])
+        g.add_arrow(n1, n2)
+    return g
 
 def find_sequence(euler_graph):
     # Init stack of visited nodes and reconstructed sequence.
@@ -115,11 +112,11 @@ def euler_path(euler_graph, stack, path, node):
     
     return all_pathes
 
-def gapReconstruction(prefixString, suffixString, k, d):
-  for i in range(k+d+1,len(prefixString)):
-    if prefixString[i] != suffixString[i-k-d]:
-      return None
-  return prefixString + suffixString[-(k+d):] ##prefixString concatenated with the last k+d symbols of suffixString
+def gap_reconstruction(prefix_string, suffix_string, k, d):
+    for i in range(k+d+1,len(prefix_string)):
+        if prefix_string[i] != suffix_string[i-k-d]:
+            return None
+    return prefix_string + suffix_string[-(k+d):] ##prefix_string concatenated with the last k+d symbols of suffix_string
 
 def render_path_single(path):
     """
@@ -136,7 +133,7 @@ def render_path_paired(path, k, d):
     path = path[::-1]
     prefix = path[0][0] + "".join(map(lambda x: x[0][-1], path[1:]))
     suffix = path[0][1] + "".join(map(lambda x: x[1][-1], path[1:]))
-    return gapReconstruction(prefix, suffix, k, d)
+    return gap_reconstruction(prefix, suffix, k, d)
 
 def load_fasta(file_handle):
     string = ""
@@ -156,7 +153,7 @@ def test_single_graph(genome_sequence):
     """
        Testing fuction for finding smallest parameter k so that genome sequence is still reconstructed correctly.
     """
-    k = 2
+    k = 18
     while True:
 
         euler_graph = get_graph(genome_sequence, k)
@@ -198,7 +195,7 @@ if __name__ == "__main__":
     # Create graph.
     #euler_graph = get_graph("TAATGCCATGGGATGTT", 3)
     euler_graph = get_graph("TAATGCCATGGGATGTT", 3)
-    print(euler_graph)
+    #print(euler_graph)
     
     # Find sequence (Euler path) in the graph.
     ind = 1
@@ -212,7 +209,7 @@ if __name__ == "__main__":
 
     # Create graph.
     euler_graph = get_paired_graph("TAATGCCATGGGATGTT", 3, 1)
-    print(euler_graph)
+    #print(euler_graph)
     
     # Find sequence (Euler path) in the graph.
     ind = 1

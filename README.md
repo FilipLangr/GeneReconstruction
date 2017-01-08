@@ -12,7 +12,6 @@ Our input data consists of 3 different bacteria genomes.Each bacteria genome has
 
 In our research project we implement de Brujin graph methods and test them on genomes of different lengths. In the experiment we try different values for parameters *k* and *d* and report how the length of the genome affects each method. We find smallest possible values for parameters *k* and *d* so that genomes are are still reconstructed correctly.
 
-
 ##Methods
 
 ###Overlapping kmers
@@ -35,8 +34,8 @@ First step in building a paired de Brujin graph is spliting the genome into read
 Once we have successfully constructed the paired de Brujin graph we can use the same algorithm to find an Euler path as before. Once we have found the path we assemble a *prefixString* (a sequence obtained by joining the first items of nodes) and a *suffixString* (a sequence obtained by joining the second items of nodes). The *suffixString* is delayed for *k + d* nucleotides compared to the *prefixString*. It can happen that an Eulerian path in the graph does not spell the solution, so we have to check if the overlapping substrings of *prefixString* and *suffixString* match. If they match, we concatenate *prefixString* with the last *k + d* characters of *suffixString*.
 
 ##Experiments
-We examine our De Brujin and paired De Brujin methods on 3 different genomes. We start with parameter values *k = 2* and *d = 0*. When algorithms produce correct output results for given parameters value
-we stop. If the output result are not correct we increment parameter values by 1. At the end of execution we are left with smallest possible values of parameters *k* and *d*.
+
+We examine our De Brujin and paired De Brujin methods on 3 different genomes. Methods are implementer in euler_path.py. We start with parameter values *k = 2* and *d = 0*. When algorithms produce correct output results for given parameters value we stop. If the output result are not correct we increment parameter values by 1. At the end of execution we are left with smallest possible values of parameters *k* and *d*.
 
 ##Results
 
@@ -72,6 +71,7 @@ Next we present a table of smallest found distances between two reads *d* for gi
 
 \* - Not every *d* in (0 ; 50000) interval was tested.
 
+We implemented another version of path finding algoritm that outputs all possible solutions (euler_path_all_paths.py), however it is computationally very complex. We had it running overnight on genome of length 40k, but it was automatically killed at some point. Therefore we are unable to provide this answers.
 
 ##References
 * Compeau & Pevzner: [Bioinformatics algorithms: an active learning approach](http://bioinformaticsalgorithms.com)
