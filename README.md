@@ -6,9 +6,9 @@ Repository for Introduction to bioinformatics project at FRI, UNI-LJ, winter sem
 ##Introduction
 
 In Gene reconstruction research project we examine three different methods for genome assembly. We divide genome into k-mers and then we use various methods to reconstruct genome into original sequence. First method is called overlapping kmers. We start by creating a graph where nodes represent *k*-mers and edges connect overlapping *k*-mers. Second method we implement is de Brujin graph in which we are searching for Eulerian path. Third method
-also uses de Brujin graph but instead of single reads (*k*-mers) we use read-pairs where pairs are some *d* distance apart.
+also uses de Brujin graph but instead of single reads (*k*-mers) we use read-pairs where pairs are some distance *d* apart.
 
-Our input data consists of 3 different bacteria genomes.Each bacteria genome has different number of nucleotides. Bacterias Klebsiella pneumoniae, Streptomyces silvensis and Citrobacter freundii have 40955, 104514, 180261 nucleotides respectively.
+Our input data consists of 3 different bacteria genomes. Each bacteria genome has different number of nucleotides. Bacterias Klebsiella pneumoniae, Streptomyces silvensis and Citrobacter freundii have 40955, 104514, 180261 nucleotides respectively.
 
 In our research project we implement de Brujin graph methods and test them on genomes of different lengths. In the experiment we try different values for parameters *k* and *d* and report how the length of the genome affects each method. We find smallest possible values for parameters *k* and *d* so that genomes are are still reconstructed correctly.
 
@@ -22,7 +22,7 @@ Genome reconstruction with overlapping *k*-mers starts with building an overlap 
 
 In overlapping *k*-mers method we have a graph where nodes represent k-mers and edges connect overlapping *k*-mers. When using this graph to construct original genome, we have to Hamiltonian path which is NP-complete problem. So we use better method, we construct a graph where we assign k-mers to edges and nodes represent *(k-1)*-mers. When having graph like that, we have to find Eulerian path.
 
-Graph where nodes represent *(k-1)*-mers and edges represent k-mers is called De Brujin graph. When building De Bruin graph we must first split the genome into *k*-mers. For each *k*-mer we than construct two nodes with *(k-1)*-mer connected with directed edge representing given *k*-mer. For example, for *k*-mer ACCTG we then get two *(k-1)*-mer nodes ACCT --> CCTG and to the directed edge *k*-mer ACCTG is assigned. Then we just glue identically labeled nodes together. When gluing identically labeled nodes together, we must keep all edges, so sometimes we get more than one edge between two nodes.
+Graph where nodes represent *(k-1)*-mers and edges represent k-mers is called de Brujin graph. When building de Bruin graph we must first split the genome into *k*-mers. For each *k*-mer we than construct two nodes with *(k-1)*-mer connected with directed edge representing given *k*-mer. For example, for *k*-mer ACCTG we then get two *(k-1)*-mer nodes ACCT --> CCTG and to the directed edge *k*-mer ACCTG is assigned. Then we just glue identically labeled nodes together. When gluing identically labeled nodes together, we must keep all edges, so sometimes we get more than one edge between two nodes.
 
 
 ###Paired de Brujin graph
@@ -35,7 +35,7 @@ Once we have successfully constructed the paired de Brujin graph we can use the 
 
 ##Experiments
 
-We examine our De Brujin and paired De Brujin methods on 3 different genomes. Methods are implementer in euler_path.py. We start with parameter values *k = 2* and *d = 0*. When algorithms produce correct output results for given parameters value we stop. If the output result are not correct we increment parameter values by 1. At the end of execution we are left with smallest possible values of parameters *k* and *d*.
+We examine our de Brujin and paired de Brujin methods on 3 different genomes. Methods are implemented in euler_path.py. We start with parameter values *k = 2* and *d = 0*. When algorithms produce correct output results for given parameters value we stop. If the output result are not correct we increment parameter values by 1. At the end of execution we are left with smallest possible values of parameters *k* and *d*.
 
 ##Results
 
